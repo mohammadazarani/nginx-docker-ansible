@@ -1,2 +1,52 @@
 ---
-# tasks file for nginx-provision
+# apt install docker
+- name: Install docker
+  apt:
+	name: "{{ item }}"
+	state: present
+	update_cache: yes
+  with_items:
+	- apt-transport-https
+	- ca-certificates
+	- curl
+	- gnupg-agent
+	- software-properties-common
+
+	
+- name: Add Docker’s official GPG key
+  apt_key:
+	url: https://download.docker.com/linux/ubuntu/gpg
+	state:present
+
+- name: Verify that you now have the key with the fingerprint 9DC8 5822 9FC7 DD38 854A  E2D8 8D81 803C 0EBF CD88, by searching for the last 8 characters of the fingerprint.
+  apt_key:
+	id: 0EBFCD88
+	state: present
+
+
+- name: Set up the stable repository
+  apt_repository:
+	repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs)
+	state: present
+	update_cache: yes
+
+- name: Update apt packages
+  apt:
+	update_cache: yes
+
+- name: Install docker daemon and docker engine
+  apt:
+	name : "{{ item }}"
+	state: present
+	update_cach: yes
+  with_items:
+	-  docker-ce
+	- containerd.io
+  notify: Start docker boot time
+	
+
+- name : install docker-compose
+  get_url:
+	url: "https://github.com/docker/compose/releases/download/1.27.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+	dest: /usr/local/bin/docker-compose
+	mode: 0755
