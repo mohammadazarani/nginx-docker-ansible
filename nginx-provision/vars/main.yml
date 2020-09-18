@@ -1,5 +1,7 @@
 ---
 # vars file for nginx-provision
 
-python: /usr/bin/python3
+ansible_python_interpreter: /usr/bin/python3
+
+nginx_container_dir: /tmp/nginx_dir
 
