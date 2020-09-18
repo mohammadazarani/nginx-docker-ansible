@@ -1,2 +1,6 @@
 ---
-# handlers file for nginx-provision
+- name: Start docker boot time
+  systemd:
+	name: docker
+	state: started
+	enabled: yes
