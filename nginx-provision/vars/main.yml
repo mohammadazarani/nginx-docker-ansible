@@ -3,5 +3,5 @@
 
 ansible_python_interpreter: /usr/bin/python3
 
-nginx_container_dir: /tmp/nginx_dir
+nginx_container_dir: /tmp/nginx_dir/nginx-docker/
 
