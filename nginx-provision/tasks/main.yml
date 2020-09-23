@@ -2,25 +2,28 @@
 
 #  update apt
 - name: update apt packages
+  become: yes
   apt:
     update_cache: yes
 
 # Update the apt package index and install packages to allow apt to use a repository over HTTPS:
 - name: install docker
+  become: yes
   apt:
-    name: "{{ item }}"
+    name: ['apt-transport-https', 'ca-certificates', 'curl', 'gnupg-agent', 'software-properties-common']
     state: present
     update_cache: yes
-  with_items:
-    - apt-transport-https
-    - ca-certificates
-    - curl
-    - gnupg-agent
-    - software-properties-common
+#  with_items:
+#    - apt-transport-https
+#    - ca-certificates
+#    - curl
+#    - gnupg-agent
+#    - software-properties-common
 
 
 #$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 - name: add Dockers official GPG key
+  become: yes
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
     state: present
@@ -33,30 +36,34 @@
 
 #sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu  $(lsb_release -cs)  stable"
 - name: set up the stable repository
+  become: yes
   apt_repository:
-    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs)
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable
     state: present
     update_cache: yes
 
 - name: Update apt packages
+  become: yes
   apt:
     update_cache: yes
 
 
 # Install Docker Engine
 - name: install docker daemon and docker engine
+  become: yes
   apt:
-    name : "{{ item }}"
+    name : [docker-ce, containerd.io]
     state: present
     update_cach: yes
-  with_items:
-    - docker-ce
-    - containerd.io
+#  with_items:
+#    - docker-ce
+#    - containerd.io
   notify: Start docker boot time
 
 
 # Install docker compose 
 - name : install docker-compose
+  become: yes
   get_url:
     url: https://github.com/docker/compose/releases/download/1.27.3/docker-compose-$(uname -s)-$(uname -m)
     dest: /usr/local/bin/docker-compose
@@ -65,12 +72,14 @@
 
 #cp docker dir (Dockerfile and docker-compose) to remote host
 - name: Copy docker dir to remote hsot
+  become: yes
   copy: 
     src: "{{ playbook_dir }}/../nginx-docker"
     dest: "{{ nginx_container_dir }}"
 
 
-- name: build comppose file
+- name: build compose file
+  become: yes
   command: docker-compose up -d --build
   args:
     chdir: "{{ nginx_container_dir }}"
