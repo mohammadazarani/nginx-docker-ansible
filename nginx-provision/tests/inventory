@@ -1,2 +1,9 @@
-localhost
+all:
+  hosts:
+    remote:
+        ansible_host: 192.168.56.2
+        ansible_user: root
+        ansible_connection: ssh
+        ansible_port: 22
+ 
 
