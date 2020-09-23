@@ -55,7 +55,7 @@
 - name : install docker-compose
   become: yes
   get_url:
-    url: https://github.com/docker/compose/releases/download/1.27.3/docker-compose-$(uname -s)-$(uname -m)
+    url: https://github.com/docker/compose/releases/download/1.27.3/docker-compose-Linux-x86_64
     dest: /usr/local/bin/docker-compose
     mode: 0755
 
@@ -64,7 +64,7 @@
 - name: Copy docker dir to remote hsot
   become: yes
   copy: 
-    src: "{{ playbook_dir }}/../nginx-docker"
+    src: "{{ playbook_dir }}/../../nginx-docker"
     dest: "{{ nginx_container_dir }}"
 
 
